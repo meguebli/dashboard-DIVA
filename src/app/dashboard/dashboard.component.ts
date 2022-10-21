@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Employe } from 'app/modeles/employe';
 import * as Chartist from 'chartist';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,14 +9,14 @@ import * as Chartist from 'chartist';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
-  constructor() { }
+  nbrsEmp =0;
+  employes!:Employe[];
+  constructor(private _dbServ :DashboardService) { }
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
       seq = 0;
       delays = 80;
       durations = 500;
-
       chart.on('draw', function(data) {
         if(data.type === 'line' || data.type === 'area') {
           data.element.animate({
@@ -66,6 +68,14 @@ export class DashboardComponent implements OnInit {
       seq2 = 0;
   };
   ngOnInit() {
+    this._dbServ.getNbrsEmp().subscribe(nb=>{
+      this.nbrsEmp=nb[0].NbEmp;
+      //console.log("### ",this.nbrsEmp,nb)
+    });
+    this._dbServ.getListsEmp().subscribe(emp=>{
+      this.employes=emp;
+      console.log("### ",this.employes,emp)
+    });
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
       const dataDailySalesChart: any = {
