@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Employe } from 'app/modeles/employe';
+import { Phase } from 'app/modeles/phase';
 import * as Chartist from 'chartist';
 import { DashboardService } from './dashboard.service';
 
@@ -11,6 +12,10 @@ import { DashboardService } from './dashboard.service';
 export class DashboardComponent implements OnInit {
   nbrsEmp =0;
   employes!:Employe[];
+  ofsActif=0;
+  phases !:Phase[];
+  nbCH : 0;
+  nbAr=0;
   constructor(private _dbServ :DashboardService) { }
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
@@ -72,9 +77,25 @@ export class DashboardComponent implements OnInit {
       this.nbrsEmp=nb[0].NbEmp;
       //console.log("### ",this.nbrsEmp,nb)
     });
+    this._dbServ.getOfActif().subscribe(nb=>{
+      this.ofsActif=nb[0].NbOf;
+    //  console.log("### ",this.ofsActif,nb)
+    });
+    this._dbServ.getNbChaines().subscribe(nb=>{
+      this.nbCH=nb[0].NbCh;
+    //  console.log("### ",this.ofsActif,nb)
+    });
+    this._dbServ.getNbArticles().subscribe(nb=>{
+      this.nbAr=nb[0].NbAr;
+    //  console.log("### ",this.ofsActif,nb)
+    });
     this._dbServ.getListsEmp().subscribe(emp=>{
       this.employes=emp;
-      console.log("### ",this.employes,emp)
+     // console.log("### ",this.employes,emp)
+    });
+    this._dbServ.getAllPhases().subscribe(phase=>{
+      this.phases=phase;
+     // console.log("### ",this.employes,emp)
     });
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
